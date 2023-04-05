@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SpellingSvg from '../components/SpellingSvg';
 import { getSessionInfo } from '../utils/localsession';
 
-function InitialPage() {
+function SelectGame() {
   const [isMouseOver, setIsMouseOver] = useState(false);
   const [configuration, setConfiguration] = useState<any>();
   const buttonRef = createRef<HTMLAnchorElement>();
@@ -55,27 +55,23 @@ function InitialPage() {
 
           <div className="card justify-center">
             <Link
-              style={{
-                textTransform: 'none'
-              }}
-              to={`/select-game`}
+              ref={buttonRef}
+              to={`/select-hand?mode=game`}
               className={`${
                 configuration?.level ? 'left-96' : 'left-56'
               } btn rounded-full w-48 h-16 absolute  inset-y-7 bg-[#FFE090] text-[#683aff] hover:bg-white text-3xl leading-8 normal-case font-normal`}
             >
-              Game Mode
+              New game
             </Link>
-
-            <Link
-              style={{
-                textTransform: 'none'
-              }}
-              to={`/select-hand?mode=learn`}
-              className="btn rounded-full w-48 h-16 absolute left-28 inset-y-7 bg-[#FFE090] text-[#683aff] hover:bg-white text-3xl leading-8 normal-case font-normal"
-            >
-              Learn Mode
-            </Link>
-
+            {configuration?.level && (
+              <Link
+                ref={buttonRef}
+                to={`/start-level?level=${configuration?.level}&lang=${configuration?.lang}&hand=${configuration?.hand}`}
+                className="btn rounded-full w-48 h-16 absolute left-28 inset-y-7 bg-[#FFE090] text-[#683aff] hover:bg-white text-3xl leading-8 normal-case font-normal"
+              >
+                Resume
+              </Link>
+            )}
             <div className="text-[14px] absolute top-32 left-28 font-[LabilGroteskRegular sans-serif] leading-5">
               <p>This game will using your webcam and machine learning to</p>
               <p>
@@ -90,4 +86,4 @@ function InitialPage() {
   );
 }
 
-export default InitialPage;
+export default SelectGame;
