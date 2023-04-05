@@ -20,9 +20,7 @@ async function getLanguageWords(lang, mode, levelIndex) {
       );
       return words;
     } else {
-      const { default: words } = await import(
-        `../data/Amharic/level-${4}.ts` // get level 4
-      );
+      const { default: words } = await import(`../data/Amharic/level-${4}.ts`);
       return words;
     }
   }
