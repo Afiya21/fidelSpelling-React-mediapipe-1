@@ -14,7 +14,17 @@ async function getLanguageWords(lang, mode, levelIndex) {
       return words;
     }
   } else {
-    return amharicWords;
+    if (mode == 'learn') {
+      const { default: words } = await import(
+        `../data/Amharic/level-${levelIndex}.ts`
+      );
+      return words;
+    } else {
+      const { default: words } = await import(
+        `../data/Amharic/level-${4}.ts` // get level 4
+      );
+      return words;
+    }
   }
 }
 

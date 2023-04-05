@@ -1,70 +1,98 @@
-import React, { createRef, useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import BackButton from '../components/BackButton';
+import { useEffect, useState } from 'react';
 import SpellingSvg from '../components/SpellingSvg';
-import { levels } from '../utils/amharicindex';
-
-function StartLevel() {
-  const [isMouseOver, setIsMouseOver] = useState(false);
-  const buttonRef = createRef<HTMLAnchorElement>();
-  useEffect(() => {
-    const mouseEnterHandler = async (e: MouseEvent) => {
-      setIsMouseOver(true);
-    };
-    const mouseLeaveHandler = async (e: MouseEvent) => {
-      setIsMouseOver(false);
-    };
-    buttonRef.current?.addEventListener('mouseenter', mouseEnterHandler);
-    buttonRef.current?.addEventListener('mouseleave', mouseLeaveHandler);
-
-    return () => {
-      buttonRef.current?.removeEventListener('mouseenter', mouseEnterHandler);
-      buttonRef.current?.removeEventListener('mouseleave', mouseLeaveHandler);
-    };
-  }, []);
-
+import LinkwithQuery from '../components/LinkwithQuery';
+import { getLevelScore } from '../utils/localsession';
+function SelectLevel() {
   const searchParams = useSearchParams();
-  const level = Number(searchParams[0].get('level'));
-  return (
-    <div
-      className={`flex flex-col h-[100vh] bg-[#ffe090] 
-    ${
-      isMouseOver
-        ? "bg-[url('/turn.png')]"
-        : "bg-[url('/selectlevel1.png')] hover:bg-[url('/turnon.png')]"
-    } 
-    bg-top   bg-no-repeat bg-center items-center justify-center gap-10`}
-    >
-      <BackButton url={`/select-level?hand=${searchParams[0].get('hand')}`} />
-      <div className="circleTop bg-[#ffebb8] w-[230px] h-[432px] rounded-tr-full rounded-br-full absolute inset-x-0"></div>
-      <div className="circleTop bg-[#ffebb8] w-[230px] h-[432px] rounded-tl-full rounded-bl-full absolute right-0 "></div>
+  const mode = searchParams[0].get('mode');
+  const lang = searchParams[0].get('lang');
+  const [levels, setLevels] = useState([]);
 
-      <h1 className="text-8xl text-[#683aff]">Level {level}</h1>
-      <h1 className="text-xl  text-[rgb(104,58,255)]">
-        እነዢን የአማርኛ ሆሄ ይማሩ{' '}
-        <span className="text-[#683aff] ml-5">
-          {levels[level - 1].join(' , ').toUpperCase()}
-        </span>
-      </h1>
-      <h1 className="text-xl text-[#683aff] text-center ">
-        ጨዋታዉ ሲጀምር ምስሉን ተመክተዉ <h2>እጆትን እንደ ምስሉ ያርጉ</h2>
-      </h1>
-      <div className="card">
-        <Link
-          style={{
-            textTransform: 'none'
-          }}
-          ref={buttonRef}
-          to={`/game?level=${level}&hand=${searchParams[0].get(
-            'hand'
-          )}&lang=${searchParams[0].get('lang')}`}
-          className="btn my-2 h-14 hover:bg-white hover:text-[#683aff] rounded-3xl text-xl border-none text-white px-20 bg-[#683aff]"
-        >
-          Turn On Webcam
-        </Link>
+  const [imageUrl, setImageUrl] = useState('level.png');
+  const mouseEnterHandler = (e: any, level) => {
+    setImageUrl('L' + level + '.png');
+  };
+  const mouseLeaveHandler = (e: any, level) => {
+    setImageUrl('level.png');
+  };
+  useEffect(() => {
+    if (mode == 'game' && lang == 'en') {
+      (async () => {
+        let levelPlayed;
+        for (let i = 1; i <= 4; i++) {
+          levelPlayed = i;
+          if (!(await getLevelScore(`game-${i}`))) {
+            break;
+          }
+        }
+        let tempLevels = [];
+        for (let i = 1; i <= levelPlayed; i++) {
+          tempLevels.push(i);
+        }
+        setLevels(tempLevels);
+      })();
+    } else if (mode == 'game' && lang == 'am') {
+      (async () => {
+        let levelPlayed;
+        for (let i = 1; i <= 4; i++) {
+          levelPlayed = i;
+          if (!(await getLevelScore(`game-${i}`))) {
+            break;
+          }
+        }
+        let tempLevels = [];
+        for (let i = 1; i <= levelPlayed; i++) {
+          tempLevels.push(i);
+        }
+        setLevels(tempLevels);
+      })();
+    } else {
+      setLevels([1, 2, 3, 4]);
+    }
+  }, []);
+  return (
+    <div className="flex relative flex-col bg-[#683aff]  bg-no-repeat  bg-top h-[100vh] items-center justify-center gap-10">
+      <BackButton url="/select-hand" />
+      <SpellingSvg />
+      <img className="absolute z-10 top-0" src={'/levels/' + imageUrl} />
+      <div className="card  flex items-center z-20">
+        {levels.map((item, i) => {
+          return (
+            <LinkwithQuery
+              path={'/start-level'}
+              query={`level=${item}`}
+              text={`${getText(lang, mode)} ${item}`}
+              ref={null}
+              key={item}
+              style={{
+                textTransform: 'none'
+              }}
+              onMouseEnter={(e) => mouseEnterHandler(e, item)}
+              onMouseLeave={(e) => mouseLeaveHandler(e, item)}
+              className={`btn my-4 w-80 text-3xl  rounded-3xl ${
+                i == 1 ? 'ml-20' : ''
+              } ${
+                i == 2 ? 'mr-20' : ''
+              } flex items-center text-white bg-transparent hover:bg-[#fff] hover:text-[#683aff] hover:border-white border-white px-20 h-16 text-2xl text-bold`}
+            />
+          );
+        })}
       </div>
     </div>
   );
 }
+function getText(lang, mode): string {
+  if (lang == 'en') {
+    if (mode == 'learn') {
+      return 'Phase';
+    } else {
+      return 'Level';
+    }
+  } else {
+    return 'ደረጃ';
+  }
+}
 
-export default StartLevel;
+export default SelectLevel;
