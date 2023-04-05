@@ -33,6 +33,21 @@ function SelectLevel() {
         }
         setLevels(tempLevels);
       })();
+    } else if (mode == 'game' && lang == 'am') {
+      (async () => {
+        let levelPlayed;
+        for (let i = 1; i <= 4; i++) {
+          levelPlayed = i;
+          if (!(await getLevelScore(`game-${i}`))) {
+            break;
+          }
+        }
+        let tempLevels = [];
+        for (let i = 1; i <= levelPlayed; i++) {
+          tempLevels.push(i);
+        }
+        setLevels(tempLevels);
+      })();
     } else {
       setLevels([1, 2, 3, 4]);
     }
