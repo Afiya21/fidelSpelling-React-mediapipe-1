@@ -59,7 +59,9 @@ function InitialPage() {
                 textTransform: 'none'
               }}
               to={`/select-game`}
-              className="btn my-2 h-14 hover:bg-white hover:text-[#683aff] rounded-3xl text-xl border-none text-white px-20 bg-[#683aff]"
+              className={`${
+                configuration?.level ? 'left-96' : 'left-56'
+              } btn rounded-full w-48 h-16 absolute  inset-y-7 bg-[#FFE090] text-[#683aff] hover:bg-white text-3xl leading-8 normal-case font-normal`}
             >
               Game Mode
             </Link>
@@ -69,7 +71,7 @@ function InitialPage() {
                 textTransform: 'none'
               }}
               to={`/select-hand?mode=learn`}
-              className="btn my-2 h-14 text-xl hover:bg-white  hover:text-[#683aff] rounded-3xl bg-[#683aff] border-none px-20 text-white"
+              className="btn rounded-full w-48 h-16 absolute left-28 inset-y-7 bg-[#FFE090] text-[#683aff] hover:bg-white text-3xl leading-8 normal-case font-normal"
             >
               Learn Mode
             </Link>
