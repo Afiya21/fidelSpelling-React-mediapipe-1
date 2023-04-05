@@ -7,7 +7,7 @@ import SelectHand from './pages/SelectHand';
 import StartLevel from './pages/StartLevel';
 import LevelCompleted from './pages/LevelCompleted';
 import SelectLanguage from './pages/SelectLanguage';
-import SelectMode from './pages/SelectMode';
+import SelectGame from './pages/SelectGame';
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
           <Route index element={<InitialPage />} />
           <Route path="select-hand" element={<SelectHand />} />
           <Route path="select-level" element={<SelectLevel />} />
-          <Route path="select-mode" element={<SelectMode />} />
+          <Route path="select-game" element={<SelectGame />} />
           <Route path="start-level" element={<StartLevel />} />
           <Route path="select-language" element={<SelectLanguage />} />
           <Route path="level-completed" element={<LevelCompleted />} />
